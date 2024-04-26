@@ -22,9 +22,7 @@ jobs:
           python-version: '3.11'
           architecture: x64
       - name: pip install
-        run: |
-          pip install --upgrade pip
-          pip install conan cmake
+        run: pip install conan cmake
       - name: Run build script
         run: python build.py ${{ matrix.target }}
       - uses: actions/upload-artifact@v4
