@@ -1,4 +1,3 @@
-
 import os, sys
 import shutil
 import subprocess
@@ -38,9 +37,8 @@ def buildMecab():
     subprocess.run(f"git clone {mecabUrl}")
     os.chdir("mecab\\mecab")
 
-    
-    os.makedirs(f"{rootDir}/ALL/DLL32",exist_ok=True)
-    os.makedirs(f"{rootDir}/ALL/DLL64",exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
     subprocess.run(f'cmd /c "{vcvars32Path}" & call make.bat')
     shutil.move("src/libmecab.dll", f"{rootDir}/ALL/DLL32")
 
@@ -52,16 +50,12 @@ def buildWebview():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {webviewUrl}")
     os.chdir("webview\\script")
-    os.makedirs(f"{rootDir}/ALL/DLL32",exist_ok=True)
-    os.makedirs(f"{rootDir}/ALL/DLL64",exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
     subprocess.run(f"cmd /c set TARGET_ARCH=x86 & call build.bat")
-    shutil.move(
-        "../build/library/webview.dll", f"{rootDir}/ALL/DLL32"
-    )
+    shutil.move("../build/library/webview.dll", f"{rootDir}/ALL/DLL32")
     subprocess.run(f"cmd /c set TARGET_ARCH=x64 & call build.bat")
-    shutil.move(
-        "../build/library/webview.dll", f"{rootDir}/ALL/DLL64"
-    )
+    shutil.move("../build/library/webview.dll", f"{rootDir}/ALL/DLL64")
 
 
 def buildLocaleRemulator():
@@ -70,7 +64,7 @@ def buildLocaleRemulator():
     os.chdir("Locale_Remulator")
     subprocess.run(f"nuget restore")
     os.chdir("LRHook")
-    os.makedirs(f"{rootDir}/ALL/Locale_Remulator",exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/Locale_Remulator", exist_ok=True)
     subprocess.run(
         f'"{msbuildPath}" LRHook.vcxproj /p:Configuration=Release /p:Platform=x86'
     )
@@ -85,7 +79,6 @@ def buildLocaleRemulator():
         "x64/Release/LRHookx64.dll",
         f"{rootDir}/ALL/Locale_Remulator",
     )
-
 
 
 def buildLunaOCR():
@@ -134,8 +127,8 @@ def buildLunaOCR():
     subprocess.run(f"cmake --build . --config {buildType} --target install")
 
     os.chdir(f"{rootDir}/temp/LunaOCR")
-    os.makedirs(f"{rootDir}/ALL/DLL32",exist_ok=True)
-    os.makedirs(f"{rootDir}/ALL/DLL64",exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
+    os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
     shutil.move(
         f"build/win-{buildOutput}-{onnxType}-{arch32}/install/bin/LunaOCR32.dll",
         f"{rootDir}/ALL/DLL32",
@@ -151,30 +144,31 @@ def buildMagpie():
     subprocess.run(f"git clone {magpieUrl}")
     os.chdir("Magpie_CLI")
     subprocess.run(
-        f'"{msbuildPath}" -restore -p:RestorePackagesConfig=true;Configuration=Release;Platform=x64;OutDir={os.getcwd()}\\publish\\x64\\ Magpie.sln'
+        f'"{msbuildPath}" -restore -p:RestorePackagesConfig=true;Configuration=Release;Platform=x64;OutDir={os.getcwd()}\\publish\\x64\\ -t:Magpie_Core;Effects Magpie.sln'
     )
     os.makedirs(f"{rootDir}/ALL/Magpie", exist_ok=True)
     shutil.move("publish/x64/Magpie.Core.exe", f"{rootDir}/ALL/Magpie")
     shutil.move("publish/x64/effects", f"{rootDir}/ALL/Magpie")
 
 
-
 if __name__ == "__main__":
     os.chdir(rootDir)
-    
-    os.makedirs("temp",exist_ok=True)
+
+    os.makedirs("temp", exist_ok=True)
     installVCLTL()
-    if sys.argv[1]=='mecab':
+    if sys.argv[1] == "mecab":
 
         buildMecab()
-    elif sys.argv[1]=='webview':
+    elif sys.argv[1] == "webview":
         buildWebview()
-    elif sys.argv[1]=='lr':
+    elif sys.argv[1] == "lr":
         buildLocaleRemulator()
-    elif sys.argv[1]=='ocr':
+    elif sys.argv[1] == "ocr":
         buildLunaOCR()
-    elif sys.argv[1]=='magpie':
+    elif sys.argv[1] == "magpie":
         buildMagpie()
-    
+
     os.chdir(rootDir)
-    os.system(rf'"C:\Program Files\7-Zip\7z.exe" a -m0=LZMA -mx9 .\\{sys.argv[1]}.zip .\\ALL')
+    os.system(
+        rf'"C:\Program Files\7-Zip\7z.exe" a -m0=LZMA -mx9 .\\{sys.argv[1]}.zip .\\ALL'
+    )
