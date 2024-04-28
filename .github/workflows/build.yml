@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        target: [webview,mecab,lr,magpie,ocr]
+        target: [mecab,lr,magpie,ocr]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

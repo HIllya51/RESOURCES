@@ -15,7 +15,6 @@ opencvFile = "https://github.com/RapidAI/OpenCVBuilder/releases/download/4.7.0/o
 opencvFileName = "opencv-4.7.0-windows-vs2019-mt.7z"
 
 mecabUrl = "https://github.com/HIllya51/mecab.git"
-webviewUrl = "https://github.com/HIllya51/webview.git"
 localeRemulatorUrl = "https://github.com/HIllya51/Locale_Remulator.git"
 magpieUrl = "https://github.com/HIllya51/Magpie_CLI.git"
 lunaOCRUrl = "https://github.com/HIllya51/LunaOCR.git"
@@ -44,18 +43,6 @@ def buildMecab():
 
     subprocess.run(f'cmd /c "{vcvars64Path}" & call makeclean.bat & call make.bat')
     shutil.move("src/libmecab.dll", f"{rootDir}/ALL/DLL64")
-
-
-def buildWebview():
-    os.chdir(rootDir + "\\temp")
-    subprocess.run(f"git clone {webviewUrl}")
-    os.chdir("webview\\script")
-    os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
-    os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
-    subprocess.run(f"cmd /c set TARGET_ARCH=x86 & call build.bat")
-    shutil.move("../build/library/webview.dll", f"{rootDir}/ALL/DLL32")
-    subprocess.run(f"cmd /c set TARGET_ARCH=x64 & call build.bat")
-    shutil.move("../build/library/webview.dll", f"{rootDir}/ALL/DLL64")
 
 
 def buildLocaleRemulator():
@@ -159,8 +146,6 @@ if __name__ == "__main__":
     if sys.argv[1] == "mecab":
 
         buildMecab()
-    elif sys.argv[1] == "webview":
-        buildWebview()
     elif sys.argv[1] == "lr":
         buildLocaleRemulator()
     elif sys.argv[1] == "ocr":
