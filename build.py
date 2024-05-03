@@ -45,29 +45,6 @@ def buildMecab():
     shutil.move("src/libmecab.dll", f"{rootDir}/ALL/DLL64")
 
 
-def buildLocaleRemulator():
-    os.chdir(rootDir + "\\temp")
-    subprocess.run(f"git clone {localeRemulatorUrl}")
-    os.chdir("Locale_Remulator")
-    subprocess.run(f"nuget restore")
-    os.chdir("LRHook")
-    os.makedirs(f"{rootDir}/ALL/Locale_Remulator", exist_ok=True)
-    subprocess.run(
-        f'"{msbuildPath}" LRHook.vcxproj /p:Configuration=Release /p:Platform=x86'
-    )
-    shutil.move(
-        "x64/Release/LRHookx32.dll",
-        f"{rootDir}/ALL/Locale_Remulator",
-    )
-    subprocess.run(
-        f'"{msbuildPath}" LRHook.vcxproj /p:Configuration=Release /p:Platform=x64'
-    )
-    shutil.move(
-        "x64/Release/LRHookx64.dll",
-        f"{rootDir}/ALL/Locale_Remulator",
-    )
-
-
 def buildLunaOCR():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {lunaOCRUrl}")
@@ -146,8 +123,6 @@ if __name__ == "__main__":
     if sys.argv[1] == "mecab":
 
         buildMecab()
-    elif sys.argv[1] == "lr":
-        buildLocaleRemulator()
     elif sys.argv[1] == "ocr":
         buildLunaOCR()
     elif sys.argv[1] == "magpie":
