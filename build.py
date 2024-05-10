@@ -107,6 +107,7 @@ def buildMagpie():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {magpieUrl}")
     os.chdir("Magpie_CLI")
+    subprocess.run(f"git checkout origin/cli")
     subprocess.run(
         f'"{msbuildPath}" -restore -p:RestorePackagesConfig=true;Configuration=Release;Platform=x64;OutDir={os.getcwd()}\\publish\\x64\\ -t:Magpie_Core;Effects Magpie.sln'
     )
