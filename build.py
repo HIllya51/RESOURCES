@@ -11,8 +11,8 @@ vcltlFile = "https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.0.9/VC-L
 vcltlFileName = "VC-LTL-5.0.9-Binary.7z"
 onnxruntimeFile = "https://github.com/RapidAI/OnnxruntimeBuilder/releases/download/1.14.1/onnxruntime-1.14.1-vs2019-static-mt.7z"
 onnxruntimeFileName = "onnxruntime-1.14.1-vs2019-static-mt.7z"
-opencvFile = "https://github.com/RapidAI/OpenCVBuilder/releases/download/4.7.0/opencv-4.7.0-windows-vs2019-mt.7z"
-opencvFileName = "opencv-4.7.0-windows-vs2019-mt.7z"
+opencvFile = "https://github.com/RapidAI/OpenCVBuilder/releases/download/4.8.1/opencv-4.8.1-windows-vs2022-mt.7z"
+opencvFileName = "opencv-4.8.1-windows-vs2022-mt.7z"
 
 mecabUrl = "https://github.com/HIllya51/mecab.git"
 localeRemulatorUrl = "https://github.com/HIllya51/Locale_Remulator.git"
