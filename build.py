@@ -6,7 +6,6 @@ msbuildPath = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\MSB
 vcvars32Path = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars32.bat"
 vcvars64Path = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
 
-cmake=r'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'
 
 vcltlFile = "https://github.com/Chuyu-Team/VC-LTL5/releases/download/v5.0.9/VC-LTL-5.0.9-Binary.7z"
 vcltlFileName = "VC-LTL-5.0.9-Binary.7z"
@@ -69,26 +68,26 @@ def buildLunaOCR():
     os.makedirs(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch32}")
     os.chdir(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch32}")
     subprocess.run(
-        f'{cmake} -T "{toolset},host=x64" -A {arch32} '
+        f'cmake -T "{toolset},host=x64" -A {arch32} '
         f"-DCMAKE_INSTALL_PREFIX=install "
         f"-DCMAKE_BUILD_TYPE={buildType} -DOCR_OUTPUT={buildOutput} "
         f"-DOCR_BUILD_CRT={mtEnabled} -DOCR_ONNX={onnxType} ../.."
     )
-    subprocess.run(f"{cmake} --build . --config {buildType} -j {os.cpu_count()}")
-    subprocess.run(f"{cmake} --build . --config {buildType} --target install")
+    subprocess.run(f"cmake --build . --config {buildType} -j {os.cpu_count()}")
+    subprocess.run(f"cmake --build . --config {buildType} --target install")
 
     os.chdir(f"{rootDir}/temp/LunaOCR")
 
     os.makedirs(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch64}")
     os.chdir(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch64}")
     subprocess.run(
-        f'{cmake} -T "{toolset},host=x64" -A {arch64} '
+        f'cmake -T "{toolset},host=x64" -A {arch64} '
         f"-DCMAKE_INSTALL_PREFIX=install "
         f"-DCMAKE_BUILD_TYPE={buildType} -DOCR_OUTPUT={buildOutput} "
         f"-DOCR_BUILD_CRT={mtEnabled} -DOCR_ONNX={onnxType} ../.."
     )
-    subprocess.run(f"{cmake} --build . --config {buildType} -j {os.cpu_count()}")
-    subprocess.run(f"{cmake} --build . --config {buildType} --target install")
+    subprocess.run(f"cmake --build . --config {buildType} -j {os.cpu_count()}")
+    subprocess.run(f"cmake --build . --config {buildType} --target install")
 
     os.chdir(f"{rootDir}/temp/LunaOCR")
     os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
