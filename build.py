@@ -48,14 +48,15 @@ def buildMecab():
 def buildLunaOCR():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {lunaOCRUrl}")
-    os.chdir(rootDir +"\\temp\\LunaOCR")
-    os.chdir(rootDir +"\\temp\\LunaOCR\\onnxruntime-static")
+    os.chdir("LunaOCR")
+    os.chdir("onnxruntime-static")
     subprocess.run(f"curl -LO {onnxruntimeFile}")
     subprocess.run(f"7z x {onnxruntimeFileName}")
-    os.chdir(rootDir +"\\temp\\LunaOCR\\opencv-static")
+    os.chdir("..")
+    os.chdir("opencv-static")
     subprocess.run(f"curl -LO {opencvFile}")
     subprocess.run(f"7z x {opencvFileName}")
-    os.chdir(rootDir +"\\temp\\LunaOCR")
+    os.chdir("..")
 
     buildType = "Release"
     buildOutput = "CLIB"
@@ -65,8 +66,8 @@ def buildLunaOCR():
     arch32 = "Win32"
     arch64 = "x64"
 
-    os.makedirs(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch32}")
-    os.chdir(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch32}")
+    os.makedirs(f"build/win-{buildOutput}-{onnxType}-{arch32}")
+    os.chdir(f"build/win-{buildOutput}-{onnxType}-{arch32}")
     subprocess.run(
         f'cmake -T "{toolset},host=x64" -A {arch32} '
         f"-DCMAKE_INSTALL_PREFIX=install "
@@ -78,8 +79,8 @@ def buildLunaOCR():
 
     os.chdir(f"{rootDir}/temp/LunaOCR")
 
-    os.makedirs(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch64}")
-    os.chdir(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch64}")
+    os.makedirs(f"build/win-{buildOutput}-{onnxType}-{arch64}")
+    os.chdir(f"build/win-{buildOutput}-{onnxType}-{arch64}")
     subprocess.run(
         f'cmake -T "{toolset},host=x64" -A {arch64} '
         f"-DCMAKE_INSTALL_PREFIX=install "
@@ -92,7 +93,6 @@ def buildLunaOCR():
     os.chdir(f"{rootDir}/temp/LunaOCR")
     os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
     os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
-    # os.system('tree /F "'+rootDir+'"')
     shutil.move(
         f"build/win-{buildOutput}-{onnxType}-{arch32}/install/bin/LunaOCR32.dll",
         f"{rootDir}/ALL/DLL32",
