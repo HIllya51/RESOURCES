@@ -92,6 +92,7 @@ def buildLunaOCR():
     os.chdir(f"{rootDir}/temp/LunaOCR")
     os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
     os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
+    os.system('dir "'+rootDir+'"')
     shutil.move(
         f"build/win-{buildOutput}-{onnxType}-{arch32}/install/bin/LunaOCR32.dll",
         f"{rootDir}/ALL/DLL32",
