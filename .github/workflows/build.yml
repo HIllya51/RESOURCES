@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-2019
     strategy:
       matrix:
-        target: [mecab,ocr]
+        target: [ocr]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        target: [magpie]
+        target: [mecab,magpie]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
