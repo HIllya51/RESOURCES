@@ -48,15 +48,14 @@ def buildMecab():
 def buildLunaOCR():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {lunaOCRUrl}")
-    os.chdir("LunaOCR")
-    os.chdir("onnxruntime-static")
+    os.chdir(rootDir +"\\temp\\LunaOCR")
+    os.chdir(rootDir +"\\temp\\LunaOCR\\onnxruntime-static")
     subprocess.run(f"curl -LO {onnxruntimeFile}")
     subprocess.run(f"7z x {onnxruntimeFileName}")
-    os.chdir("..")
-    os.chdir("opencv-static")
+    os.chdir(rootDir +"\\temp\\LunaOCR\\opencv-static")
     subprocess.run(f"curl -LO {opencvFile}")
     subprocess.run(f"7z x {opencvFileName}")
-    os.chdir("..")
+    os.chdir(rootDir +"\\temp\\LunaOCR")
 
     buildType = "Release"
     buildOutput = "CLIB"
@@ -66,8 +65,8 @@ def buildLunaOCR():
     arch32 = "Win32"
     arch64 = "x64"
 
-    os.makedirs(f"build/win-{buildOutput}-{onnxType}-{arch32}")
-    os.chdir(f"build/win-{buildOutput}-{onnxType}-{arch32}")
+    os.makedirs(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch32}")
+    os.chdir(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch32}")
     subprocess.run(
         f'cmake -T "{toolset},host=x64" -A {arch32} '
         f"-DCMAKE_INSTALL_PREFIX=install "
@@ -79,8 +78,8 @@ def buildLunaOCR():
 
     os.chdir(f"{rootDir}/temp/LunaOCR")
 
-    os.makedirs(f"build/win-{buildOutput}-{onnxType}-{arch64}")
-    os.chdir(f"build/win-{buildOutput}-{onnxType}-{arch64}")
+    os.makedirs(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch64}")
+    os.chdir(rootDir+"\\temp\\LunaOCR"+ f"/build/win-{buildOutput}-{onnxType}-{arch64}")
     subprocess.run(
         f'cmake -T "{toolset},host=x64" -A {arch64} '
         f"-DCMAKE_INSTALL_PREFIX=install "
