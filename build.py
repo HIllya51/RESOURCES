@@ -113,6 +113,7 @@ def buildzstd():
     subprocess.run(f"cmd /c build.generic.cmd latest Win32 Release v143")
     os.makedirs(f"{rootDir}/ALL", exist_ok=True)
     shutil.move("bin", f"{rootDir}/ALL")
+    shutil.move("../../lib/zstd.h", f"{rootDir}/ALL")
 
 
 def buildMagpie():
