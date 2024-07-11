@@ -19,6 +19,7 @@ localeRemulatorUrl = "https://github.com/HIllya51/Locale_Remulator.git"
 magpieUrl = "https://github.com/HIllya51/Magpie_CLI.git"
 lunaOCRUrl = "https://github.com/HIllya51/LunaOCR.git"
 
+zstdgit = "https://github.com/facebook/zstd.git"
 
 rootDir = os.path.dirname(__file__)
 
@@ -103,6 +104,17 @@ def buildLunaOCR():
     )
 
 
+def buildzstd():
+    os.chdir(rootDir + "\\temp")
+    subprocess.run(f"git clone {zstdgit}")
+    os.chdir("zstd/build/VS_scripts")
+    subprocess.run(f'cmd /c "{vcvars64Path}"')
+    subprocess.run(f"cmd /c build.generic.cmd latest x64 Release v143")
+    subprocess.run(f"cmd /c build.generic.cmd latest Win32 Release v143")
+    os.makedirs(f"{rootDir}/ALL", exist_ok=True)
+    shutil.move("bin", f"{rootDir}/ALL")
+
+
 def buildMagpie():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {magpieUrl}")
@@ -128,7 +140,8 @@ if __name__ == "__main__":
         buildLunaOCR()
     elif sys.argv[1] == "magpie":
         buildMagpie()
-
+    elif sys.argv[1] == "zstd":
+        buildzstd()
     os.chdir(rootDir)
     os.system(
         rf'"C:\Program Files\7-Zip\7z.exe" a -m0=LZMA -mx9 .\\{sys.argv[1]}.zip .\\ALL'
