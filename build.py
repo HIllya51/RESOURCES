@@ -32,6 +32,25 @@ def installVCLTL():
     subprocess.run("cmd /c Install.cmd")
 
 
+def buildMecabxp():
+    os.chdir(rootDir + "\\temp")
+    subprocess.run(f"git clone {mecabUrl}")
+    os.chdir("mecab\\mecab")
+
+    with open("VC-LTL helper for nmake.cmd", "r", encoding="gbk") as ff:
+        x = ff.read()
+    with open("VC-LTL helper for nmake.cmd", "w", encoding="gbk") as ff:
+        ff.write(
+            x.replace(
+                "::set WindowsTargetPlatformMinVersion=10.0.10240.0",
+                "set WindowsTargetPlatformMinVersion=5.1.2600.0",
+            )
+        )
+    os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
+    subprocess.run(f'cmd /c "{vcvars32Path}" & call make.bat')
+    shutil.move("src/libmecab.dll", f"{rootDir}/ALL/DLL32")
+
+
 def buildMecab():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {mecabUrl}")
@@ -44,76 +63,6 @@ def buildMecab():
 
     subprocess.run(f'cmd /c "{vcvars64Path}" & call makeclean.bat & call make.bat')
     shutil.move("src/libmecab.dll", f"{rootDir}/ALL/DLL64")
-
-
-def buildLunaOCR():
-    os.chdir(rootDir + "\\temp")
-    subprocess.run(f"git clone {lunaOCRUrl}")
-    os.chdir("LunaOCR")
-    os.chdir("onnxruntime-static")
-    subprocess.run(f"curl -LO {onnxruntimeFile}")
-    subprocess.run(f"7z x {onnxruntimeFileName}")
-    os.chdir("..")
-    os.chdir("opencv-static")
-    subprocess.run(f"curl -LO {opencvFile}")
-    subprocess.run(f"7z x {opencvFileName}")
-    os.chdir("..")
-
-    buildType = "Release"
-    buildOutput = "CLIB"
-    mtEnabled = "True"
-    onnxType = "CPU"
-    toolset = "v143"
-    arch32 = "Win32"
-    arch64 = "x64"
-
-    os.makedirs(f"build/win-{buildOutput}-{onnxType}-{arch32}")
-    os.chdir(f"build/win-{buildOutput}-{onnxType}-{arch32}")
-    subprocess.run(
-        f'cmake -T "{toolset},host=x64" -A {arch32} '
-        f"-DCMAKE_INSTALL_PREFIX=install "
-        f"-DCMAKE_BUILD_TYPE={buildType} -DOCR_OUTPUT={buildOutput} "
-        f"-DOCR_BUILD_CRT={mtEnabled} -DOCR_ONNX={onnxType} ../.."
-    )
-    subprocess.run(f"cmake --build . --config {buildType} -j {os.cpu_count()}")
-    subprocess.run(f"cmake --build . --config {buildType} --target install")
-
-    os.chdir(f"{rootDir}/temp/LunaOCR")
-
-    os.makedirs(f"build/win-{buildOutput}-{onnxType}-{arch64}")
-    os.chdir(f"build/win-{buildOutput}-{onnxType}-{arch64}")
-    subprocess.run(
-        f'cmake -T "{toolset},host=x64" -A {arch64} '
-        f"-DCMAKE_INSTALL_PREFIX=install "
-        f"-DCMAKE_BUILD_TYPE={buildType} -DOCR_OUTPUT={buildOutput} "
-        f"-DOCR_BUILD_CRT={mtEnabled} -DOCR_ONNX={onnxType} ../.."
-    )
-    subprocess.run(f"cmake --build . --config {buildType} -j {os.cpu_count()}")
-    subprocess.run(f"cmake --build . --config {buildType} --target install")
-
-    os.chdir(f"{rootDir}/temp/LunaOCR")
-    os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
-    os.makedirs(f"{rootDir}/ALL/DLL64", exist_ok=True)
-    shutil.move(
-        f"build/win-{buildOutput}-{onnxType}-{arch32}/install/bin/LunaOCR32.dll",
-        f"{rootDir}/ALL/DLL32",
-    )
-    shutil.move(
-        f"build/win-{buildOutput}-{onnxType}-{arch64}/install/bin/LunaOCR64.dll",
-        f"{rootDir}/ALL/DLL64",
-    )
-
-
-def buildzstd():
-    os.chdir(rootDir + "\\temp")
-    subprocess.run(f"git clone {zstdgit}")
-    os.chdir("zstd/build/VS_scripts")
-    subprocess.run(f'cmd /c "{vcvars64Path}"')
-    subprocess.run(f"cmd /c build.generic.cmd latest x64 Release v143")
-    subprocess.run(f"cmd /c build.generic.cmd latest Win32 Release v143")
-    os.makedirs(f"{rootDir}/ALL", exist_ok=True)
-    shutil.move("bin", f"{rootDir}/ALL")
-    shutil.move("../../lib/zstd.h", f"{rootDir}/ALL")
 
 
 def buildMagpie():
@@ -137,12 +86,11 @@ if __name__ == "__main__":
     if sys.argv[1] == "mecab":
 
         buildMecab()
-    elif sys.argv[1] == "ocr":
-        buildLunaOCR()
+    elif sys.argv[1] == "mecab_xp":
+
+        buildMecabxp()
     elif sys.argv[1] == "magpie":
         buildMagpie()
-    elif sys.argv[1] == "zstd":
-        buildzstd()
     os.chdir(rootDir)
     os.system(
         rf'"C:\Program Files\7-Zip\7z.exe" a -m0=LZMA -mx9 .\\{sys.argv[1]}.zip .\\ALL'

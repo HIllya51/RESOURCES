@@ -4,33 +4,51 @@ on:
   workflow_dispatch:
 
 jobs:
+  build_mecab_xp:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v4
+      - uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
+        with:
+          sdk-version: 22621
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          architecture: x64
+      - run: pip install conan cmake
+      - run: python build.py mecab_xp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mecab_xp
+          path: mecab_xp.zip
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: common
+          files: |
+            mecab_xp.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
     runs-on: windows-latest
     strategy:
       matrix:
         target: [mecab,magpie,ocr]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Windows 10 SDK
-        uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
+      - uses: actions/checkout@v4
+      - uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
         with:
           sdk-version: 22621
-      - name: Install Python 3.11
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           architecture: x64
-      - name: pip install
-        run: pip install conan cmake
-      - name: Run build script
-        run: python build.py ${{ matrix.target }}
+      - run: pip install conan cmake
+      - run: python build.py ${{ matrix.target }}
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
           path: ${{ matrix.target }}.zip
-      - name: Release
-        uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v2
         with:
           tag_name: common
           files: |
