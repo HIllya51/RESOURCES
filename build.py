@@ -35,20 +35,18 @@ def installVCLTL():
 def buildMecabxp():
     os.chdir(rootDir + "\\temp")
     subprocess.run(f"git clone {mecabUrl}")
-    os.chdir("mecab\\mecab")
-
-    with open("VC-LTL helper for nmake.cmd", "r", encoding="gbk") as ff:
-        x = ff.read()
-    with open("VC-LTL helper for nmake.cmd", "w", encoding="gbk") as ff:
-        ff.write(
-            x.replace(
-                "::set WindowsTargetPlatformMinVersion=10.0.10240.0",
-                "set WindowsTargetPlatformMinVersion=5.1.2600.0",
-            )
-        )
+    os.chdir("mecab\\mecab\\src")
+ 
+    with open("do.bat", "w") as ff:
+         ff.write(
+                rf"""
+cmake -G "Visual Studio 16 2019" -A win32 -T v141_xp -B ./build/
+cmake --build ./build --config Release -j 14
+"""
+            ) 
+    os.system(f"cmd /c do.bat")
     os.makedirs(f"{rootDir}/ALL/DLL32", exist_ok=True)
-    subprocess.run(f'cmd /c "{vcvars32Path}" & call make.bat')
-    shutil.move("src/libmecab.dll", f"{rootDir}/ALL/DLL32")
+    shutil.move("build/Release/libmecab.dll", f"{rootDir}/ALL/DLL32")
 
 
 def buildMecab():
