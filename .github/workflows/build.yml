@@ -15,7 +15,6 @@ jobs:
         with:
           python-version: '3.11'
           architecture: x64
-      - run: pip install conan cmake
       - run: python build.py mecab_xp
       - uses: actions/upload-artifact@v4
         with:
