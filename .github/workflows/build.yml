@@ -29,9 +29,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        target: [mecab,magpie]
     steps:
       - uses: actions/checkout@v4
       - uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
@@ -41,16 +38,15 @@ jobs:
         with:
           python-version: '3.11'
           architecture: x64
-      - run: pip install conan cmake
-      - run: python build.py ${{ matrix.target }}
+      - run: python build.py mecab
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.target }}
-          path: ${{ matrix.target }}.zip
+          name: mecab
+          path: mecab.zip
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: common
           files: |
-            ${{ matrix.target }}.zip
+            mecab.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
